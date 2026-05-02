@@ -6,7 +6,7 @@ const CLIENTS: Record<string, ClientConfig> = {
     name: "Northform QA",
     owner: "Northform-qa",
     repo: "northform",
-    workflowFile: "client-northformqa.yml",
+    workflowFile: "client-northformqa-playwright.yml",
     branch: "main",
     resultsUrl:
       "https://northform-qa.github.io/northform/client-northformqa/latest/",
