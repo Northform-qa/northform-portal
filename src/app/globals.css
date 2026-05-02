@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forge-bg: #0a0a0a;
+  --color-forge-surface: #141414;
+  --color-forge-border: #252525;
+  --color-forge-text: #e4e4e7;
+  --color-forge-muted: #71717a;
+  --color-forge-primary: #06b6d4;
+  --color-forge-primary-dim: #0891b2;
+  --color-forge-success: #22c55e;
+  --color-forge-failure: #ef4444;
+  --color-forge-running: #f59e0b;
+  --color-forge-cancelled: #71717a;
+}
+
+html,
+body {
+  min-height: 100vh;
+}
