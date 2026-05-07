@@ -9,17 +9,33 @@ export default function TriggerButton({ onClick, disabled, label }: Props) {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`
-        inline-flex items-center gap-2.5 px-6 py-3 rounded-lg font-semibold text-sm
-        transition-all duration-150 select-none
-        ${
-          disabled
-            ? "bg-forge-surface border border-forge-border text-forge-muted cursor-not-allowed"
-            : "bg-forge-primary text-forge-bg hover:bg-forge-primary-dim cursor-pointer"
+      className="w-full rounded-lg text-[14px] font-medium transition-[filter] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-forge-accent focus-visible:outline-offset-2"
+      style={{
+        height: "44px",
+        ...(disabled
+          ? {
+              background: "rgba(245, 158, 11, 0.1)",
+              color: "#F59E0B",
+              border: "1px solid rgba(245, 158, 11, 0.25)",
+              cursor: "default",
+            }
+          : {
+              background: "#F59E0B",
+              color: "#0A0A0F",
+              border: "none",
+              cursor: "pointer",
+            }),
+      }}
+      onMouseEnter={(e) => {
+        if (!disabled) {
+          (e.currentTarget as HTMLButtonElement).style.filter =
+            "brightness(1.1)";
         }
-      `}
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.filter = "";
+      }}
     >
-      {!disabled && <span className="w-2 h-2 rounded-full bg-current" />}
       {label}
     </button>
   );

@@ -1,20 +1,46 @@
 @import "tailwindcss";
 
 @theme {
-  --color-forge-bg: #0a0a0a;
-  --color-forge-surface: #141414;
-  --color-forge-border: #252525;
-  --color-forge-text: #e4e4e7;
-  --color-forge-muted: #71717a;
-  --color-forge-primary: #06b6d4;
-  --color-forge-primary-dim: #0891b2;
-  --color-forge-success: #22c55e;
-  --color-forge-failure: #ef4444;
-  --color-forge-running: #f59e0b;
-  --color-forge-cancelled: #71717a;
+  /* Typography */
+  --font-heading: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Backgrounds */
+  --color-forge-bg: #0A0A0F;
+  --color-forge-elevated: #12121A;
+  --color-forge-surface: #1A1A24;
+  --color-forge-card: rgba(26, 26, 36, 0.6);
+
+  /* Foregrounds */
+  --color-forge-text: #FAFAFA;
+  --color-forge-muted: #A1A1AA;
+
+  /* Accent (amber — interactive elements, brand) */
+  --color-forge-accent: #F59E0B;
+  --color-forge-accent-muted: rgba(245, 158, 11, 0.1);
+  --color-forge-accent-border: rgba(245, 158, 11, 0.25);
+
+  /* Status: Pass / Running */
+  --color-forge-success: #1ECFA0;
+  --color-forge-pass-muted: rgba(30, 207, 160, 0.1);
+  --color-forge-pass-border: rgba(30, 207, 160, 0.2);
+
+  /* Status: Fail */
+  --color-forge-failure: #E24B4A;
+  --color-forge-fail-muted: rgba(226, 75, 74, 0.1);
+  --color-forge-fail-border: rgba(226, 75, 74, 0.2);
+
+  /* Borders */
+  --color-forge-border: rgba(255, 255, 255, 0.08);
+  --color-forge-border-hover: rgba(255, 255, 255, 0.15);
+
+  /* Misc */
+  --color-forge-cancelled: #71717A;
 }
 
 html,
 body {
   min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
 }

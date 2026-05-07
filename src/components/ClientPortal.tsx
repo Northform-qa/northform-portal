@@ -96,48 +96,65 @@ export default function ClientPortal({ config }: Props) {
   const buttonDisabled = phase === "triggering" || phase === "polling";
 
   return (
-    <div>
-      <div className="flex items-start justify-between mb-8">
+    <div className="pt-10 pb-12">
+      {/* Header row */}
+      <div className="flex items-start justify-between mb-7">
         <div>
-          <h1 className="text-2xl font-semibold text-forge-text">
+          <h1
+            className="text-forge-text text-[20px] font-semibold"
+            style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}
+          >
             {config.name}
           </h1>
-          <p className="text-forge-muted text-sm mt-1">
+          <p className="text-forge-muted text-[13px] mt-0.5">
             Playwright + API Test Suite
           </p>
         </div>
         <button
           onClick={handleSignOut}
-          className="text-xs text-forge-muted hover:text-forge-text transition-colors mt-1"
+          className="text-forge-muted text-[13px] transition-colors duration-150 hover:text-forge-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-forge-accent focus-visible:outline-offset-2 rounded"
+          style={{ minWidth: "24px", minHeight: "24px" }}
         >
           Sign out
         </button>
       </div>
 
+      {/* Trigger error */}
       {triggerError && (
-        <div className="mb-6 px-4 py-3 rounded-lg bg-red-950/40 border border-red-800/40 text-forge-failure text-sm">
+        <div
+          className="mb-6 px-4 py-3 rounded-lg text-forge-failure text-sm"
+          role="alert"
+          style={{
+            background: "rgba(226, 75, 74, 0.1)",
+            border: "1px solid rgba(226, 75, 74, 0.2)",
+          }}
+        >
           {triggerError}
         </div>
       )}
 
-      <div className="flex items-center gap-4">
-        <TriggerButton
-          onClick={phase === "done" ? handleRunAgain : handleTrigger}
-          disabled={buttonDisabled}
-          label={buttonLabel}
-        />
-        {config.resultsUrl && phase === "idle" && (
+      {/* Full-width run button */}
+      <TriggerButton
+        onClick={phase === "done" ? handleRunAgain : handleTrigger}
+        disabled={buttonDisabled}
+        label={buttonLabel}
+      />
+
+      {/* View latest report link — idle state only */}
+      {config.resultsUrl && phase === "idle" && (
+        <div className="mt-3 text-center">
           <a
             href={config.resultsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-forge-muted hover:text-forge-primary transition-colors"
+            className="text-[13px] text-forge-muted hover:text-forge-text transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-forge-accent focus-visible:outline-offset-2 rounded"
           >
             View latest report →
           </a>
-        )}
-      </div>
+        </div>
+      )}
 
+      {/* Live run feed */}
       {triggeredAt && (
         <ResultsFeed
           key={triggeredAt.toISOString()}

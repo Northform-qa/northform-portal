@@ -23,15 +23,20 @@ export default async function SlugPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-forge-bg">
-      <header className="border-b border-forge-border px-6 py-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <span className="text-forge-primary font-mono text-xs tracking-widest uppercase">
+      <header className="h-[52px] bg-forge-elevated border-b border-forge-border flex items-center">
+        <div className="w-full max-w-4xl mx-auto px-8 flex items-center justify-between">
+          <span
+            className="text-forge-accent text-[13px] font-semibold tracking-[0.12em] uppercase"
+            style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}
+          >
             Northform Forge
           </span>
-          <span className="text-forge-muted text-xs font-mono">{config.slug}</span>
+          <span className="text-forge-muted text-[12px] font-mono">
+            {config.slug}
+          </span>
         </div>
       </header>
-      <div className="max-w-4xl mx-auto px-6 py-10">
+      <div className="max-w-4xl mx-auto px-8">
         <ClientPortal config={config} />
       </div>
     </main>

@@ -85,16 +85,21 @@ export default function ResultsFeed({
 
   return (
     <div className="mt-8 space-y-4">
+      {/* Run-level status row */}
       {run && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <StatusBadge status={run.status} conclusion={run.conclusion} size="md" />
+            <StatusBadge
+              status={run.status}
+              conclusion={run.conclusion}
+              size="md"
+            />
             {run.status === "completed" && resultsUrl && (
               <a
                 href={resultsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-forge-primary hover:underline"
+                className="text-[13px] text-forge-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-forge-accent focus-visible:outline-offset-2 rounded"
               >
                 View full report →
               </a>
@@ -104,24 +109,34 @@ export default function ResultsFeed({
             href={run.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-forge-muted hover:text-forge-primary font-mono transition-colors"
+            className="text-forge-muted hover:text-forge-text transition-colors duration-150 font-mono text-[11px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-forge-accent focus-visible:outline-offset-2 rounded"
+            aria-label={`View run #${run.id} on GitHub`}
           >
             #{run.id}
           </a>
         </div>
       )}
 
+      {/* Waiting state */}
       {waiting && !fetchError && (
-        <div className="flex items-center gap-2 text-forge-muted text-sm">
-          <span className="w-2 h-2 rounded-full bg-forge-running animate-pulse flex-shrink-0" />
+        <div className="flex items-center gap-2 text-forge-muted text-[13px]">
+          <span
+            aria-hidden="true"
+            className="w-2 h-2 rounded-full bg-forge-accent animate-pulse flex-shrink-0"
+          />
+          <span className="sr-only">Status: </span>
           Waiting for run to start…
         </div>
       )}
 
+      {/* Fetch error */}
       {fetchError && (
-        <p className="text-forge-failure text-sm">{fetchError}</p>
+        <p role="alert" className="text-forge-failure text-[13px]">
+          {fetchError}
+        </p>
       )}
 
+      {/* Job feed containers */}
       {jobs.length > 0 && (
         <div className="space-y-3">
           {jobs.map((job) => (
@@ -142,39 +157,77 @@ function JobRow({ job }: { job: Job }) {
   );
 
   return (
-    <div className="border border-forge-border rounded-lg overflow-hidden">
+    <div
+      className="overflow-hidden"
+      style={{
+        background: "rgba(18, 18, 26, 0.8)",
+        border: "1px solid rgba(255, 255, 255, 0.06)",
+        borderRadius: "10px",
+      }}
+    >
+      {/* Feed header row */}
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-forge-surface hover:bg-zinc-900/60 transition-colors text-left"
+        aria-expanded={expanded}
+        className="w-full flex items-center justify-between text-left transition-colors duration-150 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-forge-accent focus-visible:outline-offset-[-2px]"
+        style={{
+          background: "rgba(26, 26, 36, 0.8)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+          padding: "10px 16px",
+        }}
       >
         <div className="flex items-center gap-3">
           <StatusBadge status={job.status} conclusion={job.conclusion} />
-          <span className="text-forge-text text-sm font-medium">{job.name}</span>
+          <span
+            className="text-forge-text text-[13px] font-medium"
+            style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}
+          >
+            {job.name}
+          </span>
         </div>
-        <div className="flex items-center gap-3 text-forge-muted text-xs font-mono">
+        <div className="flex items-center gap-3 text-forge-muted text-[11px] font-mono">
           {dur && <span>{dur}</span>}
-          <span>{expanded ? "▲" : "▼"}</span>
+          <span aria-hidden="true">{expanded ? "▲" : "▼"}</span>
         </div>
       </button>
 
+      {/* Step rows */}
       {expanded && visibleSteps.length > 0 && (
-        <div className="divide-y divide-forge-border">
-          {visibleSteps.map((step) => {
+        <div>
+          {visibleSteps.map((step, i) => {
             const stepDur = formatDuration(step.startedAt, step.completedAt);
+            const isLast = i === visibleSteps.length - 1;
             return (
               <div
                 key={step.number}
-                className="flex items-center justify-between px-4 py-2.5 bg-forge-bg"
+                className="flex items-center justify-between"
+                style={{
+                  padding: "9px 16px",
+                  borderBottom: isLast
+                    ? "none"
+                    : "1px solid rgba(255, 255, 255, 0.04)",
+                }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-[10px]">
                   <StepIcon
                     status={step.status}
                     conclusion={step.conclusion}
+                    stepName={step.name}
                   />
-                  <span className="text-sm text-forge-text">{step.name}</span>
+                  <span
+                    className="text-[13px]"
+                    style={{
+                      color:
+                        step.status === "queued"
+                          ? "#A1A1AA"
+                          : "#FAFAFA",
+                    }}
+                  >
+                    {step.name}
+                  </span>
                 </div>
                 {stepDur && (
-                  <span className="text-xs text-forge-muted font-mono">
+                  <span className="text-forge-muted font-mono text-[11px]">
                     {stepDur}
                   </span>
                 )}
@@ -190,26 +243,72 @@ function JobRow({ job }: { job: Job }) {
 function StepIcon({
   status,
   conclusion,
+  stepName,
 }: {
   status: string;
   conclusion: string | null;
+  stepName: string;
 }) {
   if (status === "in_progress") {
     return (
-      <span className="w-3 h-3 rounded-full border-2 border-forge-primary border-t-transparent animate-spin flex-shrink-0" />
+      <span
+        aria-label={`${stepName}: in progress`}
+        className="flex-shrink-0 w-4 text-center"
+        style={{ color: "#F59E0B", fontSize: "14px", lineHeight: 1 }}
+      >
+        <span
+          className="inline-block w-3 h-3 rounded-full border-2 border-t-transparent animate-spin"
+          style={{ borderColor: "#F59E0B", borderTopColor: "transparent" }}
+        />
+      </span>
     );
   }
   if (status === "completed") {
-    if (conclusion === "success")
-      return <span className="text-forge-success text-sm w-3">✓</span>;
-    if (conclusion === "failure")
-      return <span className="text-forge-failure text-sm w-3">✗</span>;
-    if (conclusion === "skipped")
+    if (conclusion === "success") {
       return (
-        <span className="text-forge-muted text-xs w-3 text-center">—</span>
+        <span
+          aria-label={`${stepName}: passed`}
+          className="flex-shrink-0 w-4 text-center text-forge-success"
+          style={{ fontSize: "14px" }}
+        >
+          ✓
+        </span>
       );
+    }
+    if (conclusion === "failure") {
+      return (
+        <span
+          aria-label={`${stepName}: failed`}
+          className="flex-shrink-0 w-4 text-center text-forge-failure"
+          style={{ fontSize: "14px" }}
+        >
+          ✗
+        </span>
+      );
+    }
+    if (conclusion === "skipped") {
+      return (
+        <span
+          aria-label={`${stepName}: skipped`}
+          className="flex-shrink-0 w-4 text-center text-forge-muted"
+          style={{ fontSize: "12px" }}
+        >
+          —
+        </span>
+      );
+    }
   }
+  // Pending
   return (
-    <span className="w-1.5 h-1.5 rounded-full bg-forge-muted flex-shrink-0" />
+    <span
+      aria-label={`${stepName}: pending`}
+      className="flex-shrink-0 w-4 flex items-center justify-center"
+    >
+      <span
+        aria-hidden="true"
+        className="rounded-full bg-forge-muted"
+        style={{ width: "6px", height: "6px" }}
+      />
+    </span>
   );
 }
